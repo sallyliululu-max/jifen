@@ -1,0 +1,347 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>成长积分本</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: exercise-book grid page, teacher's red-pen stamps for scores, bottom tab bar app shell */
+:root{
+  --paper:#F3F6FB; --grid:#DFE7F2; --card:#FFFFFF; --ink:#1F2A44; --muted:#66728A; --line:#D7DFEA;
+  --red:#D2382C; --red-soft:#FCE5E1; --green:#1C8656; --green-soft:#DEF2E8;
+  --gold:#C98A00; --gold-soft:#FFF1C7; --blue:#2D5BA6; --blue-soft:#E2EBF8;
+  --display:"Yuanti SC","STYuanti","HYQiHei","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  --body:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111827; --grid:#1A2335; --card:#192233; --ink:#E7ECF5; --muted:#9AA6BC; --line:#2A3549;
+  --red:#FF6E61; --red-soft:#3B201E; --green:#4CC48E; --green-soft:#16322A;
+  --gold:#F3C14B; --gold-soft:#3A3015; --blue:#86AEF0; --blue-soft:#1B2A45; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111827; --grid:#1A2335; --card:#192233; --ink:#E7ECF5; --muted:#9AA6BC; --line:#2A3549;
+  --red:#FF6E61; --red-soft:#3B201E; --green:#4CC48E; --green-soft:#16322A;
+  --gold:#F3C14B; --gold-soft:#3A3015; --blue:#86AEF0; --blue-soft:#1B2A45; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
+*{box-sizing:border-box}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+.kid{font-family:var(--display);font-size:22px;line-height:1.2}
+.kid small{display:block;font-family:var(--body);font-size:12px;color:var(--muted);letter-spacing:.02em}
+.bal{display:flex;align-items:baseline;gap:4px;background:var(--gold-soft);border-radius:999px;padding:4px 14px 4px 10px}
+.bal .star{color:var(--gold);font-size:20px}
+.bal b{font-family:var(--display);font-size:30px;font-weight:400;font-variant-numeric:tabular-nums;line-height:1.1}
+.bal span{font-size:12px;color:var(--muted)}
+
+main{padding-block:16px calc(96px + env(safe-area-inset-bottom,0px))}
+main .wrap{display:flex;flex-direction:column;gap:16px}
+
+.datebar{display:flex;align-items:center;gap:8px}
+.datebar .d{flex:1;text-align:center;font-family:var(--display);font-size:22px}
+.datebar .d small{display:block;font-family:var(--body);font-size:12px;color:var(--muted)}
+.nav{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:20px;line-height:1}
+.nav:disabled{opacity:.35;cursor:default}
+.link{border:none;background:none;color:var(--blue);font-size:13px;padding:6px}
+
+.stamprow{display:flex;align-items:center;gap:14px}
+.stamp{flex:none;width:92px;height:92px;border-radius:50%;border:3px solid var(--red);color:var(--red);display:grid;place-items:center;
+  text-align:center;transform:rotate(-8deg);font-family:var(--display);background:var(--card)}
+.stamp b{display:block;font-size:30px;font-weight:400;line-height:1;font-variant-numeric:tabular-nums}
+.stamp i{font-style:normal;font-size:12px}
+.stamp.empty{border-style:dashed;border-color:var(--line);color:var(--muted)}
+.stamptxt{min-width:0;color:var(--muted);font-size:13px}
+.stamptxt strong{display:block;color:var(--ink);font-size:15px}
+
+.sec{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.sec h2{margin:0;font-family:var(--display);font-weight:400;font-size:19px;padding:12px 14px 4px;display:flex;justify-content:space-between;align-items:baseline}
+.sec h2 em{font-style:normal;font-family:var(--body);font-size:13px;color:var(--muted)}
+.sub{font-size:12px;letter-spacing:.06em;color:var(--muted);padding:8px 14px 2px}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 14px;border-top:1px dashed var(--line)}
+.row:first-of-type{border-top:none}
+.row .lbl{flex:1 1 120px;min-width:0;font-weight:600}
+.row .lbl small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.chip.on.good{background:var(--green-soft);border-color:var(--green);color:var(--green);font-weight:600}
+.chip.on.bad{background:var(--red-soft);border-color:var(--red);color:var(--red);font-weight:600}
+.chip.on.star{background:var(--gold-soft);border-color:var(--gold);color:var(--gold);font-weight:600}
+.empty-note{padding:12px 14px;color:var(--muted);font-size:13px}
+
+.rew{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.rcard .ic{font-family:var(--display);font-size:20px}
+.rcard .cost{font-size:13px;color:var(--muted)}
+.rcard .cost b{color:var(--red);font-size:18px;font-variant-numeric:tabular-nums}
+.rcard input{width:100%;border:1px solid var(--line);border-radius:10px;padding:7px 10px;background:var(--paper)}
+.primary{border:none;border-radius:12px;background:var(--blue);color:#fff;padding:10px 12px;font-weight:600}
+.primary.danger{background:var(--red)}
+.primary:disabled{background:var(--line);color:var(--muted);cursor:default}
+.ghost{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px}
+.pair{display:flex;gap:8px}.pair>*{flex:1}
+.hint{font-size:12px;color:var(--muted);margin:0}
+
+.list{display:flex;flex-direction:column}
+.li{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px dashed var(--line)}
+.li:first-child{border-top:none}
+.li .main{flex:1;min-width:0}
+.li .main small{display:block;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.pts{font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pts.pos{color:var(--green)}.pts.neg{color:var(--red)}
+.x{border:none;background:none;color:var(--muted);font-size:13px;padding:4px 6px}
+.x.warn{color:var(--red);font-weight:600}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-family:var(--display);font-weight:400;font-size:24px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.bars{display:flex;align-items:flex-end;gap:4px;height:120px;padding:24px 14px 0}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.bar i{display:block;width:100%;max-width:22px;border-radius:5px 5px 0 0;background:var(--blue)}
+.bar i.today{background:var(--red)}
+.bar em{font-style:normal;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar em.neg{color:var(--red)}
+.barx{display:flex;gap:4px;padding:4px 14px 12px;border-top:1px solid var(--line)}
+.barx span{flex:1;text-align:center;font-size:10px;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.tag{font-size:11px;padding:1px 7px;border-radius:999px;background:var(--blue-soft);color:var(--blue)}
+.tag.bad{background:var(--red-soft);color:var(--red)}
+.tag.good{background:var(--gold-soft);color:var(--gold)}
+
+.form{display:flex;flex-direction:column;gap:10px;padding:12px 14px 14px}
+.form label{font-size:13px;color:var(--muted)}
+.inp{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:var(--paper)}
+textarea.inp{min-height:96px;font-family:ui-monospace,Menlo,monospace;font-size:12px;resize:vertical;overflow-wrap:anywhere}
+.lifeed{display:flex;gap:6px;align-items:center}
+.lifeed .inp:first-child{flex:1;min-width:0}
+.lifeed .inp.num{width:72px;flex:none;text-align:center}
+.msg{font-size:13px;padding:8px 10px;border-radius:10px;background:var(--blue-soft);color:var(--blue)}
+.msg.err{background:var(--red-soft);color:var(--red)}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px}
+.cmp div{border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.cmp b{display:block;font-size:12px;color:var(--muted);font-weight:400}
+
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--card);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tab{border:none;background:none;padding:9px 0 10px;font-size:12px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:1px}
+.tab b{font-family:var(--display);font-weight:400;font-size:20px;line-height:1.1}
+.tab.on{color:var(--red)}
+@media (prefers-reduced-motion:no-preference){.stamp:not(.empty){animation:pop .25s ease-out}}
+@keyframes pop{from{transform:rotate(-8deg) scale(.85)}to{transform:rotate(-8deg) scale(1)}}
+</style>
+</head><body>
+
+<header class="top"><div class="wrap">
+  <div class="kid" id="kidName"></div>
+  <div class="bal"><span class="star">★</span><b id="balance">0</b><span>分可用</span></div>
+</div></header>
+<main><div class="wrap" id="view"></div></main>
+<nav class="tabs"><div class="in" id="tabs"></div></nav>
+
+<script>
+(function(){
+const KEY='kidpoints.v1';
+const HW=[{k:'yw',n:'语文'},{k:'sx',n:'数学'},{k:'yy',n:'英语'}];
+const REW={ipad:{n:'玩 iPad',d:'20 分钟',pts:10},gift:{n:'买礼物',d:'一个',pts:100}};
+const TABS=[{k:'score',n:'打分',i:'✎'},{k:'shop',n:'兑换',i:'★'},{k:'log',n:'记录',i:'≡'},{k:'data',n:'数据',i:'⇅'}];
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const pad=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parse=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
+const WK='日一二三四五六';
+const nice=s=>{const d=parse(s);return (d.getMonth()+1)+'月'+d.getDate()+'日'};
+const wk=s=>'周'+WK[parse(s).getDay()];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sgn=n=>(n>0?'+':'')+n;
+
+function blank(){return{v:1,name:'宝贝',updated:0,
+  life:[{id:'l1',n:'自己整理书包',p:5},{id:'l2',n:'按时上床睡觉',p:5},{id:'l3',n:'帮忙做家务',p:5}],
+  days:{},spends:[]}}
+function valid(o){return o&&typeof o==='object'&&o.days&&typeof o.days==='object'&&Array.isArray(o.spends)&&Array.isArray(o.life)}
+let S=null;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!valid(S))S=blank();
+function save(){S.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+let tab='score',cur=ymd(new Date()),pend=null,pendDel=null,impData=null,impMsg='',copyMsg='';
+const today=()=>ymd(new Date());
+
+function ensure(d){if(!S.days[d])S.days[d]={hw:{yw:{d:0,t:0},sx:{d:0,t:0},yy:{d:0,t:0}},rd:0,en:0,ma:0,life:{}};return S.days[d]}
+function score(r){if(!r)return 0;let s=0;
+  for(const h of HW){const x=(r.hw&&r.hw[h.k])||{};if(x.d)s+=5;s+=(x.t||0)*10}
+  s+=(r.rd||0)*10;if(r.en)s+=10;if(r.ma)s+=10;
+  for(const k in (r.life||{}))s+=Number(r.life[k].p)||0;return s}
+function touched(r){if(!r)return false;if(r.rd||r.en||r.ma||Object.keys(r.life||{}).length)return true;
+  return HW.some(h=>{const x=r.hw[h.k]||{};return x.d||x.t})}
+function totals(){let e=0,sp=0;for(const d in S.days)e+=score(S.days[d]);for(const x of S.spends)sp+=Number(x.pts)||0;return{e,sp,b:e-sp}}
+
+function chip(act,arg,txt,on,cls){return `<button class="chip ${on?'on '+cls:''}" data-a="${act}" data-v="${arg}" aria-pressed="${on?'true':'false'}">${txt}</button>`}
+
+function vScore(){
+  const r=S.days[cur];const sc=score(r);const t=touched(r);const isT=cur===today();
+  const hw=k=>(r&&r.hw[k])||{d:0,t:0};
+  let h=`<div class="datebar">
+    <button class="nav" data-a="day" data-v="-1" aria-label="前一天">‹</button>
+    <div class="d">${nice(cur)}<small>${wk(cur)}${isT?' · 今天':''}</small></div>
+    <button class="nav" data-a="day" data-v="1" aria-label="后一天" ${isT?'disabled':''}>›</button></div>
+  ${isT?'':'<div style="text-align:center;margin-top:-10px"><button class="link" data-a="today">回到今天</button></div>'}
+  <div class="stamprow">
+    <div class="stamp ${t?'':'empty'}"><div><b>${t?sgn(sc):'—'}</b><i>${t?'今日得分':'还没打分'}</i></div></div>
+    <div class="stamptxt"><strong>${t?'这一天已打分':'点下面的选项开始打分'}</strong>每天一张成绩单，改动会自动保存。可以翻回前几天补打。</div>
+  </div>
+  <section class="sec"><h2>学习 <em>日常作业</em></h2>`;
+  for(const x of HW){const v=hw(x.k);
+    h+=`<div class="row"><div class="lbl">${x.n}作业<small>主动完成 +5，老师表扬 +10，批评 −10</small></div><div class="btns">
+      ${chip('hwd',x.k,'主动完成 +5',v.d,'good')}${chip('hwt',x.k+':1','表扬 +10',v.t===1,'star')}${chip('hwt',x.k+':-1','批评 −10',v.t===-1,'bad')}</div></div>`}
+  const rd=r?r.rd:0;
+  h+=`<div class="sub">家里学习</div>
+    <div class="row"><div class="lbl">语文阅读 30 分钟</div><div class="btns">${chip('rd','1','完成 +10',rd===1,'good')}${chip('rd','-1','未完成 −10',rd===-1,'bad')}</div></div>
+    <div class="row"><div class="lbl">英语阅读</div><div class="btns">${chip('en','','主动完成 +10',r&&r.en,'good')}</div></div>
+    <div class="row"><div class="lbl">数学计算一页</div><div class="btns">${chip('ma','','主动完成 +10',r&&r.ma,'good')}</div></div>
+  </section>
+  <section class="sec"><h2>生活 <em>在“数据”页修改项目</em></h2>`;
+  const ids=new Set(S.life.map(x=>x.id));
+  if(!S.life.length&&!(r&&Object.keys(r.life).length))h+=`<div class="empty-note">还没有生活项目，去“数据”页添加。</div>`;
+  for(const it of S.life){const on=!!(r&&r.life[it.id]);const p=on?r.life[it.id].p:it.p;
+    h+=`<div class="row"><div class="lbl">${esc(it.n)}</div><div class="btns">${chip('life',it.id,(p<0?'扣 ':'做到 ')+sgn(p).replace('-','−'),on,p<0?'bad':'good')}</div></div>`}
+  if(r)for(const k in r.life)if(!ids.has(k)){const x=r.life[k];
+    h+=`<div class="row"><div class="lbl">${esc(x.n)}<small>项目已删除，仅保留这天的记录</small></div><div class="btns">${chip('life',k,sgn(x.p),true,x.p<0?'bad':'good')}</div></div>`}
+  return h+`</section>`;
+}
+
+function vShop(){
+  const {b}=totals();
+  let h=`<div class="rew">`;
+  for(const k in REW){const w=REW[k];const ok=b>=w.pts;const p=pend===k;
+    h+=`<div class="rcard"><div class="ic">${w.n}</div><div class="cost">${w.d} · <b>${w.pts}</b> 分</div>
+    ${k==='gift'?`<input id="giftNote" placeholder="礼物名称（可不填）" maxlength="30">`:''}
+    ${p?`<div class="pair"><button class="ghost" data-a="cancel">取消</button><button class="primary danger" data-a="buyok" data-v="${k}">确认 −${w.pts}</button></div>`
+      :`<button class="primary" data-a="buy" data-v="${k}" ${ok?'':'disabled'}>${ok?'兑换':'还差 '+(w.pts-b)+' 分'}</button>`}
+    </div>`}
+  h+=`</div><section class="sec"><h2>兑换记录 <em>${S.spends.length} 次</em></h2><div class="list">`;
+  const L=[...S.spends].sort((a,c)=>c.at-a.at);
+  if(!L.length)h+=`<div class="empty-note">还没有兑换过。攒够分数就可以换 iPad 时间或礼物。</div>`;
+  for(const x of L){const w=REW[x.kind]||{n:x.kind};
+    h+=`<div class="li"><div class="main">${w.n}${x.note?'：'+esc(x.note):''}<small>${nice(x.date)} ${wk(x.date)}</small></div>
+    <span class="pts neg">−${x.pts}</span>
+    ${pendDel===x.id?`<button class="x warn" data-a="delok" data-v="${x.id}">确认撤销</button>`:`<button class="x" data-a="del" data-v="${x.id}">撤销</button>`}</div>`}
+  return h+`</div></section>`;
+}
+
+function dayTags(r){const t=[];
+  for(const h of HW){const x=r.hw[h.k]||{};if(x.d)t.push(['',h.n+'作业']);if(x.t===1)t.push(['good',h.n+'表扬']);if(x.t===-1)t.push(['bad',h.n+'批评'])}
+  if(r.rd===1)t.push(['','语文阅读']);if(r.rd===-1)t.push(['bad','语文阅读未完成']);
+  if(r.en)t.push(['','英语阅读']);if(r.ma)t.push(['','数学计算']);
+  for(const k in r.life)t.push([r.life[k].p<0?'bad':'',r.life[k].n]);
+  return t.map(([c,s])=>`<span class="tag ${c}">${esc(s)}</span>`).join('')}
+
+function vLog(){
+  const T=totals();
+  let h=`<div class="stats"><div class="stat"><b>${T.e}</b><span>累计获得</span></div><div class="stat"><b>${T.sp}</b><span>已兑换</span></div><div class="stat"><b>${T.b}</b><span>剩余</span></div></div>`;
+  const days=[];const base=parse(today());
+  for(let i=13;i>=0;i--){const d=new Date(base);d.setDate(d.getDate()-i);const s=ymd(d);days.push([s,S.days[s]?score(S.days[s]):null])}
+  const mx=Math.max(10,...days.map(x=>x[1]||0));
+  h+=`<section class="sec"><h2>最近 14 天 <em>每日得分</em></h2><div class="bars">`;
+  for(const[s,v]of days){const hh=v>0?Math.max(4,v/mx*100):0;
+    h+=`<div class="bar"><em class="${v<0?'neg':''}">${v===null?'':v}</em><i class="${s===today()?'today':''}" style="height:${hh}%"></i></div>`}
+  h+=`</div><div class="barx">${days.map(([s])=>`<span>${parse(s).getDate()}</span>`).join('')}</div></section>`;
+  const ks=Object.keys(S.days).filter(k=>touched(S.days[k])).sort().reverse();
+  h+=`<section class="sec"><h2>每日成绩单 <em>${ks.length} 天</em></h2><div class="list">`;
+  if(!ks.length)h+=`<div class="empty-note">打过分的日子会出现在这里。</div>`;
+  for(const k of ks){const v=score(S.days[k]);
+    h+=`<div class="li" data-a="goto" data-v="${k}" style="cursor:pointer"><div class="main">${nice(k)} ${wk(k)}<div class="tags">${dayTags(S.days[k])}</div></div><span class="pts ${v<0?'neg':'pos'}">${sgn(v)}</span></div>`}
+  return h+`</div></section>`;
+}
+
+function summ(o){let e=0,sp=0,n=0;for(const d in o.days){if(touched(o.days[d]))n++;e+=score.call(null,o.days[d])}for(const x of o.spends)sp+=Number(x.pts)||0;return{n,e,sp,b:e-sp,u:o.updated}}
+const when=t=>t?new Date(t).toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'未知';
+
+function vData(){
+  let h=`<section class="sec"><h2>基本设置</h2><div class="form">
+    <label for="nameIn">孩子的称呼</label><input class="inp" id="nameIn" value="${esc(S.name)}" maxlength="12">
+  </div></section>
+  <section class="sec"><h2>生活项目 <em>分数可填负数表示扣分</em></h2><div class="form" id="lifeEd">`;
+  S.life.forEach(it=>{h+=`<div class="lifeed"><input class="inp" id="ln_${it.id}" data-life="${it.id}" data-f="n" value="${esc(it.n)}" maxlength="20"><input class="inp num" id="lp_${it.id}" data-life="${it.id}" data-f="p" type="number" inputmode="numeric" value="${it.p}"><button class="x" data-a="lifedel" data-v="${it.id}">删除</button></div>`});
+  h+=`<button class="ghost" data-a="lifeadd">＋ 添加生活项目</button>
+    <p class="hint">改分值只影响之后的打分，以前的记录保持原样。</p></div></section>
+  <section class="sec"><h2>导出数据</h2><div class="form">
+    <p class="hint">复制下面这段文字，用微信“文件传输助手”或备忘录发到另一部手机，在那边的“导入数据”里粘贴。</p>
+    <textarea class="inp" id="expOut" readonly>${esc(JSON.stringify(S))}</textarea>
+    <button class="primary" data-a="copy">复制全部数据</button>
+    ${copyMsg?`<div class="msg">${copyMsg}</div>`:''}
+  </div></section>
+  <section class="sec"><h2>导入数据</h2><div class="form">
+    <label for="impIn">粘贴导出的文字</label>
+    <textarea class="inp" id="impIn" placeholder='{"v":1,...}'></textarea>
+    <label for="impFile">或选择保存的文件（.json / .txt）</label>
+    <input class="inp" type="file" id="impFile" accept=".json,.txt,application/json,text/plain">
+    <button class="ghost" data-a="impcheck">检查数据</button>`;
+  if(impMsg)h+=`<div class="msg err">${impMsg}</div>`;
+  if(impData){const a=summ(S),b=summ(impData);
+    h+=`<div class="cmp"><div><b>本机现在</b>${a.n} 天记录<br>余额 ${a.b} 分<br>更新于 ${when(a.u)}</div><div><b>要导入的</b>${b.n} 天记录<br>余额 ${b.b} 分<br>更新于 ${when(b.u)}</div></div>
+    <p class="hint">导入会用新数据替换本机全部记录。请确认要导入的是较新的那份。</p>
+    <div class="pair"><button class="ghost" data-a="impcancel">取消</button><button class="primary danger" data-a="impok">替换本机数据</button></div>`}
+  return h+`</div></section>`;
+}
+
+function render(){
+  document.getElementById('kidName').innerHTML=`${esc(S.name)}的积分本<small>${nice(today())} ${wk(today())}</small>`;
+  document.getElementById('balance').textContent=totals().b;
+  document.getElementById('tabs').innerHTML=TABS.map(t=>`<button class="tab ${tab===t.k?'on':''}" data-a="tab" data-v="${t.k}"><b>${t.i}</b>${t.n}</button>`).join('');
+  document.getElementById('view').innerHTML=({score:vScore,shop:vShop,log:vLog,data:vData})[tab]();
+}
+
+function tryImport(txt){
+  impData=null;impMsg='';
+  try{const o=JSON.parse(String(txt).trim());if(!valid(o))throw 0;impData=o}
+  catch(e){impMsg='这段内容不是有效的积分数据。请完整复制另一部手机“导出数据”框里的全部文字。'}
+  render();
+}
+
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-a]');if(!el)return;
+  const a=el.dataset.a,v=el.dataset.v;
+  if(a!=='copy')copyMsg='';
+  switch(a){
+    case 'tab':tab=v;pend=null;pendDel=null;window.scrollTo(0,0);break;
+    case 'day':{const d=parse(cur);d.setDate(d.getDate()+Number(v));const s=ymd(d);if(s<=today())cur=s;break}
+    case 'today':cur=today();break;
+    case 'goto':cur=v;tab='score';window.scrollTo(0,0);break;
+    case 'hwd':{const r=ensure(cur);r.hw[v].d=r.hw[v].d?0:1;save();break}
+    case 'hwt':{const[k,n]=v.split(':');const r=ensure(cur);const t=Number(n);r.hw[k].t=r.hw[k].t===t?0:t;save();break}
+    case 'rd':{const r=ensure(cur);const t=Number(v);r.rd=r.rd===t?0:t;save();break}
+    case 'en':{const r=ensure(cur);r.en=r.en?0:1;save();break}
+    case 'ma':{const r=ensure(cur);r.ma=r.ma?0:1;save();break}
+    case 'life':{const r=ensure(cur);if(r.life[v])delete r.life[v];else{const it=S.life.find(x=>x.id===v);if(it)r.life[v]={n:it.n,p:Number(it.p)||0}}save();break}
+    case 'buy':pend=v;break;
+    case 'cancel':pend=null;break;
+    case 'buyok':{const w=REW[v];if(totals().b>=w.pts){const note=v==='gift'?(document.getElementById('giftNote')||{}).value||'':'';
+      S.spends.push({id:uid(),kind:v,pts:w.pts,note:note.trim(),date:today(),at:Date.now()});save()}pend=null;break}
+    case 'del':pendDel=v;break;
+    case 'delok':S.spends=S.spends.filter(x=>x.id!==v);pendDel=null;save();break;
+    case 'lifeadd':S.life.push({id:uid(),n:'新项目',p:5});save();break;
+    case 'lifedel':S.life=S.life.filter(x=>x.id!==v);save();break;
+    case 'copy':{const ta=document.getElementById('expOut');const txt=ta.value;
+      const done=ok=>{copyMsg=ok?'已复制，去另一部手机粘贴导入。':'已选中全部文字，请长按选择“复制”。';render();if(!ok){const t=document.getElementById('expOut');t.focus();t.select()}};
+      try{navigator.clipboard.writeText(txt).then(()=>done(true),()=>done(false))}catch(err){done(false)}return}
+    case 'impcheck':tryImport((document.getElementById('impIn')||{}).value||'');return;
+    case 'impcancel':impData=null;impMsg='';break;
+    case 'impok':if(impData){S=impData;if(!S.name)S.name='宝贝';save();impData=null;copyMsg='';impMsg='';tab='log'}break;
+  }
+  render();
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='nameIn'){S.name=t.value.trim()||'宝贝';save();render();return}
+  if(t.dataset.life){const it=S.life.find(x=>x.id===t.dataset.life);if(!it)return;
+    if(t.dataset.f==='n')it.n=t.value.trim()||'未命名';else it.p=Math.round(Number(t.value))||0;save();return}
+  if(t.id==='impFile'&&t.files&&t.files[0]){const fr=new FileReader();fr.onload=()=>tryImport(fr.result);fr.readAsText(t.files[0]);}
+});
+render();
+})();
+</script>
+</body></html>
